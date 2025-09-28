@@ -2,10 +2,12 @@
 
 namespace Unimar\Poo;
 
+use Unimar\Poo\Vendedor;
+
 //CLASSE PRODUTO, PRIMEIROS PASSOS:
 //============================================================================
 //1.Criar a classe Produto
-//2.Criar os atributos nome do jogo, quantidade em estoque e preço
+//2.Criar os atributos vendedor, nome do jogo, quantidade em estoque e preço
 //3.Criar o construtor da classe Produto
 //4.Criar os métodos getters para cada atributo
 //5.Criar alguns objetos da classe Produto
@@ -18,12 +20,14 @@ namespace Unimar\Poo;
 
 class Produto{
     //Atributos
+    public Vendedor $vendedor;
     protected string $nomeJogo;
     protected int $qtd;
     protected float $preco;
 
     //Construtor da classe Produto, com o nome do jogo, quantidade em estoque e preço
-    public function __construct(string $nomeJogo, int $qtd, float $preco) {
+    public function __construct(Vendedor $vendedor, string $nomeJogo, int $qtd, float $preco) {
+        $this->vendedor = $vendedor;
         $this->nomeJogo = $nomeJogo;
         $this->qtd = $qtd;
         $this->preco = $preco;

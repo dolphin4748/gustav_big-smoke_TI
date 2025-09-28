@@ -12,7 +12,7 @@ class Usuario
     protected string $sobrenome;
     protected string $email;
     protected string $senha;
-    protected $conta;
+    public $conta;
 
 
 
@@ -24,7 +24,7 @@ class Usuario
             
             return new Cliente("111.111.111-11", "clinte", "teste", "cliente@gamil.com", "12345");
         }
-        else if($email == 'vendedro@gmail.com' && $senha == '12345')
+        else if($email == 'vendedor@gmail.com' && $senha == '12345')
         {
           
             echo "Vendedor logado\n";
@@ -42,6 +42,16 @@ class Usuario
     {
         echo "Usuario deslogado.\n";
 
+    } 
+
+    public function getNomeCompleto(): string
+    {
+        return $this->nome . " " . $this->sobrenome;
+    }
+
+    public function getCpf(): string
+    {
+        return $this->cpf;
     }
 
 }

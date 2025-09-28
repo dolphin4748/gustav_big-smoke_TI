@@ -15,9 +15,12 @@ class Vendedor extends Usuario
         $this->sobrenome = $sobrenome;
         $this->email = $email;
         $this->senha = $senha;
+        $this->conta = new ContaCorrente($this, 0);
     }
 
-    public function adcionarEstoque(Produto $produto) {
+    public function adcionarEstoque(string $nomeJogo, int $qtd, float $preco) {
+        $produto = new Produto($this, $nomeJogo, $qtd, $preco);
+
         echo "item acionado ao estoque de produtos.\n";
         $this->estoque[] = $produto;
     }
@@ -32,7 +35,7 @@ class Vendedor extends Usuario
         if (empty($this->estoque)){
             echo "\nnão existe nenhum item no estoque atual.\n";
         }else{
-            echo "\nitens do estoque de produtos: ";
+            echo "\nitens do estoque de produtos: \n";
             foreach ($this->estoque as $item) {
                 echo $item->exibirDetalhes();
             }

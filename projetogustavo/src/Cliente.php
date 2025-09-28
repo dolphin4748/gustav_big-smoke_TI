@@ -4,6 +4,7 @@ namespace Unimar\Poo;
 
 use Unimar\Poo\Usuario;
 use Unimar\Poo\Produto;
+use Unimar\Poo\ContaCorrente;
 
 class Cliente extends Usuario
 {
@@ -16,6 +17,7 @@ class Cliente extends Usuario
         $this->sobrenome = $sobrenome;
         $this->email = $email;
         $this->senha = $senha;
+        $this->conta = new ContaCorrente($this, 0);
     }
 
     public function adcionarCarrinho(Produto $produto, int $qtd): void{
@@ -44,13 +46,12 @@ class Cliente extends Usuario
         if ($verificar){
 
             echo "total a ser gasto: R$". number_format($total, 2, ',', '.'). "\n";
-            //if ($this->conta->transferir($item->vendedor->getConta(), $total)){ //checa se a transferencia deu certo, porem ainda não existe nenhuma conta de pagamento
-            //    
-            //}
-            foreach ($this->carrinho as $item) {
-
-                $item["produto"]->atualizarEstoque($item["qtd"]);
-                $this->removerCarrinho(0);
+            if ($this->conta->temSaldoDisponivel($total)){ //checa se a transferencia deu certo, porem ainda não existe nenhuma conta de pagamento
+                foreach ($this->carrinho as $item) {
+                    $this->conta->transferir($item["produto"]->vendedor->conta, $item["produto"]->getPreco() * $item["qtd"]);
+                    $item["produto"]->atualizarEstoque($item["qtd"]);
+                    $this->removerCarrinho(0);
+                }
             }
         }else{
             echo "algum dos item pesentes no carrinho não possui estoque para efetuar a compra.\n";
