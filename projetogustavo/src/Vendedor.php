@@ -22,8 +22,10 @@ class Vendedor extends Usuario
         $this->stoque[] = $produto;
     }
 
-    public function removerStoque() {
-        //coisas acontecem
+    public function removerStoque(int $index) {
+        echo "removendo {$this->stoque[$index]->titulo} do estoque./n";
+        unset($this->stoque[$index]);
+        $this->stoque = array_values($this->stoque);        
     }
 
     public function listarStoque() {

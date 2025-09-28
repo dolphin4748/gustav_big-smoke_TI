@@ -23,8 +23,10 @@ class Cliente extends Usuario
         $this->carrinho[] = $produto;
     }
 
-    public function removerCarrinho() {
-        //coisas acontecem
+    public function removerCarrinho(int $index) {
+        echo "removendo {$this->carrinho[$index]->titulo} do carrinho.\n";
+        unset($this->carrinho[$index]);
+        $this->carrinho = array_values($this->carrinho);        
     }
 
     public function comprarCarrinho() {
@@ -32,9 +34,9 @@ class Cliente extends Usuario
     }
 
     public function listarCarrinho() {
-        echo "\nitens do carrinho de compras: ";
+        echo "\nitens do carrinho de compras: \n";
         foreach ($this->carrinho as $item) {
-            echo "\n## {$item->titulo} || {$item->valor} ##";
+            echo "## {$item->titulo} || {$item->valor} ##\n";
         }
 
     } 
