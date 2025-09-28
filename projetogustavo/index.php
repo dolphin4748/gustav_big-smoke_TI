@@ -16,20 +16,28 @@ $Usuario = $Usuario->login($email, $senha); // essa parte em especifico, é just
 if ($Usuario != null){
     $jogos = [];
 
-    $jogos[] = new Produto("dying light", 99.99);
-    $jogos[] = new Produto("resident evil 4", 22.25);
-    $jogos[] = new Produto("hollow knight", 49.99);
-    $jogos[] = new Produto("persona 4 golden", 99.99);
+    $jogos[] = new Produto("Red Dead Redemption 2", 10, 250.00);
+    $jogos[] = new Produto("Dark Souls III", 15, 180.00);
+    $jogos[] = new Produto("God of War", 5, 300.00);
+    $jogos[] = new Produto("Hollow Knight", 20, 80.00);
+    $jogos[] = new Produto("Cyberpunk 2077", 8, 220.00);
+    $jogos[] = new Produto("Sekiro: Shadows Die Twice", 12, 200.00);
+    $jogos[] = new Produto("Battlefield 6", 7, 150.00);
+    $jogos[] = new Produto("The Witcher 3: Wild Hunt", 9, 190.00);
+
 
     foreach ($jogos as $item) {
-        $Usuario->adcionarCarrinho($item);
+        $Usuario->adcionarCarrinho($item, 2);
     }
 
 
     $Usuario->listarCarrinho();
 
-    $Usuario->removerCarrinho(1);
-    $Usuario->removerCarrinho(2);
+    $Usuario->comprarCarrinho();
 
     $Usuario->listarCarrinho();
+
+    foreach ($jogos as $item) {
+        echo $item->exibirDetalhes();
+    }
 }

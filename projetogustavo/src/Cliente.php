@@ -18,25 +18,54 @@ class Cliente extends Usuario
         $this->senha = $senha;
     }
 
-    public function adcionarCarrinho(Produto $produto): void{
+    public function adcionarCarrinho(Produto $produto, int $qtd): void{
         echo "item acionado ao carrinho de compras. \n";
-        $this->carrinho[] = $produto;
+        $this->carrinho[] = [
+            "produto" => $produto,
+            "qtd" => $qtd
+        ];
     }
 
     public function removerCarrinho(int $index) {
-        echo "removendo {$this->carrinho[$index]->titulo} do carrinho.\n";
+        echo "removendo ". $this->carrinho[$index]["produto"]->getNomeJogo(). " do carrinho.\n";
         unset($this->carrinho[$index]);
         $this->carrinho = array_values($this->carrinho);        
     }
 
     public function comprarCarrinho() {
-        //coisas acontecem
+        $total = array_reduce($this->carrinho, fn($carry, $item) => $carry + $item["produto"]->getPreco() * $item["qtd"], 0.0);
+
+        foreach ($this->carrinho as $item){
+            $verificar = $item["produto"]->checarEstoque($item["qtd"]);
+            if ($verificar == false){
+                break;
+            }
+        }
+        if ($verificar){
+
+            echo "total a ser gasto: R$". number_format($total, 2, ',', '.'). "\n";
+            //if ($this->conta->transferir($item->vendedor->getConta(), $total)){ //checa se a transferencia deu certo, porem ainda não existe nenhuma conta de pagamento
+            //    
+            //}
+            foreach ($this->carrinho as $item) {
+
+                $item["produto"]->atualizarEstoque($item["qtd"]);
+                $this->removerCarrinho(0);
+            }
+        }else{
+            echo "algum dos item pesentes no carrinho não possui estoque para efetuar a compra.\n";
+        }
     }
 
     public function listarCarrinho() {
-        echo "\nitens do carrinho de compras: \n";
-        foreach ($this->carrinho as $item) {
-            echo "## {$item->titulo} || {$item->valor} ##\n";
+
+        if (empty($this->carrinho)){
+            echo "\nnão existe nenhum item no carrinho atual.\n";
+        }else{
+            echo "\nitens do carrinho de compras: \n";
+            foreach ($this->carrinho as $item) {
+                echo $item["produto"]->exibirDetalhes();
+            }
         }
 
     } 

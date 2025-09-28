@@ -7,7 +7,7 @@ use Unimar\Poo\Produto;
 
 class Vendedor extends Usuario
 {
-    protected $stoque = [];
+    protected $estoque = [];
 
     public function __construct(string $cpf, string $nome, string $sobrenome, string $email, string $senha){
         $this->cpf = $cpf;
@@ -17,24 +17,31 @@ class Vendedor extends Usuario
         $this->senha = $senha;
     }
 
-    public function adcionarStoque(Produto $produto) {
-        echo "item acionado ao stoque de produtos.\n";
-        $this->stoque[] = $produto;
+    public function adcionarEstoque(Produto $produto) {
+        echo "item acionado ao estoque de produtos.\n";
+        $this->estoque[] = $produto;
     }
 
-    public function removerStoque(int $index) {
-        echo "removendo {$this->stoque[$index]->titulo} do estoque./n";
-        unset($this->stoque[$index]);
-        $this->stoque = array_values($this->stoque);        
+    public function removerEstoque(int $index) {
+        echo "removendo {$this->estoque[$index]->getNomeJogo()} do estoque./n";
+        unset($this->estoque[$index]);
+        $this->estoque = array_values($this->estoque);        
     }
 
-    public function listarStoque() {
-        echo "\nitens do stoque de produtos: ";
-        foreach ($this->stoque as $item) {
-            echo "\n## {$item->titulo} || {$item->valor} ##";
+    public function listarEstoque() {
+        if (empty($this->estoque)){
+            echo "\nnão existe nenhum item no estoque atual.\n";
+        }else{
+            echo "\nitens do estoque de produtos: ";
+            foreach ($this->estoque as $item) {
+                echo $item->exibirDetalhes();
+            }
         }
-
     } 
+
+    public function getEstoque(){
+        return $this->estoque;
+    }
 
 }
 
