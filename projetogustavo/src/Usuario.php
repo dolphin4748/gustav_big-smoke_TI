@@ -2,6 +2,9 @@
 
 namespace Unimar\Poo;
 
+use Unimar\Poo\Cliente;
+use Unimar\Poo\Vendedor;
+
 class Usuario
 {
     protected string $cpf;
@@ -9,41 +12,36 @@ class Usuario
     protected string $sobrenome;
     protected string $email;
     protected string $senha;
-    protected bool $logado = false; 
-    protected int $identificacao;
+    protected $conta;
 
 
 
-    public function login(string $email, string $senha): bool 
+    public function login(string $email, string $senha)
     {   
-        if($email == 'vodkagames@mario.com' && $senha == 'mario12345') 
+        if($email == 'cliente@gmail.com' && $senha == '12345') 
+        {
+            echo "Cliente logado\n";
+            
+            return new Cliente("111.111.111-11", "clinte", "teste", "cliente@gamil.com", "12345");
+        }
+        else if($email == 'vendedro@gmail.com' && $senha == '12345')
         {
           
-            $this->logado = true;
-            $this->identificacao = 1;
-            echo'Cliente logado';
+            echo "Vendedor logado\n";
             
-            return true;
+            return new Vendedor("111.111.111-11", "vendedor", "teste", "vendedor@gamil.com", "12345");
         }
-        else if($email == 'ricagames@mario.com' && $senha == 'suvacodecobra34')
-        {
-          
-            $this->logado = true;
-            $this->identificacao = 0;
-            echo'Vendedor logado';
-            
-            return true;
-        }
+
+        echo "Não foi possivel fazer login\n";
         
-            return false;
+        return null;
         
     }
 
     public function logout()
     {
-        $this->logado = false;
-        $this->identificacao = -1;
-        echo('Usuario deslogado.');
+        echo "Usuario deslogado.\n";
+
     }
 
 }
