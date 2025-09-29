@@ -20,6 +20,7 @@ class Cliente extends Usuario
         $this->conta = new ContaCorrente($this, 0);
     }
 
+    //Função para adcionar algum item no carrinho
     public function adcionarCarrinho(Produto $produto, int $qtd): void{
         echo "item acionado ao carrinho de compras. \n";
         $this->carrinho[] = [
@@ -28,14 +29,27 @@ class Cliente extends Usuario
         ];
     }
 
+    //Função para remover algum item do carrinho
     public function removerCarrinho(int $index) {
         echo "removendo ". $this->carrinho[$index]["produto"]->getNomeJogo(). " do carrinho.\n";
         unset($this->carrinho[$index]);
         $this->carrinho = array_values($this->carrinho);        
     }
 
-    public function comprarCarrinho() {
+    //Método para efetuar a compra dos itens dentro do carrinho, como Vai funcionar
+    //1. Soma o  preco de todos os produtos em uma variavel total
+    //2. Verifica se algum dos produtos não possui estoque para poder efetuar a compra, tendo a variavel vericar = true ao fim do loop se todos os itens estivem em estoque
+    //3. se vericar == true, é checado se o usuario possui saldo para efetuar a compra  
+    //4. Se sim, é feito a transferencia, atualizado o estoque do produto e por fim é removido do carrinho, isso para cada item da array carrinho
+    //5. se não possuir saldo ou verificar == false nenhuma compra é efetuada e é printada na tela o motivo do erro
+    public function comprarCarrinho(): bool {
+        if (empty($this->carrinho)) {
+            echo "Carrinho esta vazio, não há nada para comprar.\n";
+            return false;
+        }
+
         $total = array_reduce($this->carrinho, fn($carry, $item) => $carry + $item["produto"]->getPreco() * $item["qtd"], 0.0);
+        $verificar = true;
 
         foreach ($this->carrinho as $item){
             $verificar = $item["produto"]->checarEstoque($item["qtd"]);
@@ -52,12 +66,18 @@ class Cliente extends Usuario
                     $item["produto"]->atualizarEstoque($item["qtd"]);
                     $this->removerCarrinho(0);
                 }
+                return true;
+            }else{
+                echo "saldo insuficiente para realizar a compra.\n";
+                return false;
             }
         }else{
             echo "algum dos item pesentes no carrinho não possui estoque para efetuar a compra.\n";
+            return false;
         }
     }
 
+    //Função para exibir os itens no carrinho
     public function listarCarrinho() {
 
         if (empty($this->carrinho)){

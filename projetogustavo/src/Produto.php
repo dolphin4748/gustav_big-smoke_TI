@@ -19,13 +19,12 @@ use Unimar\Poo\Vendedor;
 //RESUMO:Fazer com que toda vez que o produto for comprado, o estoque diminua
 
 class Produto{
-    //Atributos
+
     public Vendedor $vendedor;
     protected string $nomeJogo;
     protected int $qtd;
     protected float $preco;
 
-    //Construtor da classe Produto, com o nome do jogo, quantidade em estoque e preço
     public function __construct(Vendedor $vendedor, string $nomeJogo, int $qtd, float $preco) {
         $this->vendedor = $vendedor;
         $this->nomeJogo = $nomeJogo;
@@ -46,19 +45,23 @@ class Produto{
         return $this->preco;
     }
 
-    //Método para atualizar o estoque do produto quando uma venda é realizada e como Vai funcionar
+    //Método para checar o estoque do produto, como Vai funcionar
     //1. Recebe a quantidade vendida em um parametro
     //2. Verifica se a quantidade vendida é menor ou igual a quantidade no estoque
-    //3. Se sim, diminui a quantidade em estoque e retorna um True
+    //3. Se sim, retorna um True
     //4. Se nao, retorna false indicando que não tem estoque suficiente
     public function checarEstoque(int $quantidadeVendida) {
         if($quantidadeVendida <= $this->qtd) {
-            return true; // Estoque atualizado
+            return true; // Tem estoque suficiente
         } else {
             return false; // Não tem estoque suficiente
         }
     }
 
+    //Método para atualizar o estoque do produto quando uma venda é realizada e como Vai funcionar
+    //1. Recebe a quantidade vendida em um parametro
+    //2. Usa o metodo checar estoque como condição para atualizar o estoque
+    //3. Se sim, diminui a quantidade em estoque
     public function atualizarEstoque(int $quantidadeVendida) {
         if($this->checarEstoque($quantidadeVendida)) {
             $this->qtd -= $quantidadeVendida;

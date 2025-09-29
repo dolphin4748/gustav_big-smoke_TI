@@ -5,30 +5,150 @@ require_once 'vendor/autoload.php';
 use Unimar\Poo\Usuario;
 use Unimar\Poo\Cliente;
 use Unimar\Poo\Vendedor;
-use Unimar\Poo\Produto;
 
-//$email = readline('Digite seu e-mail ');
-//$senha = readline('Digite sua senha ');
+// Instância só para usar o método login()
+$auth = new Usuario();
 
-$Usuario = new Usuario(); //a variavel usuario foi criada para poder alocar a classe usuario para que assim podemos usa-la. toda vez que usamos o new, estamos alocando na memória uma classe nova, se usarmos o new usuario ele não irá utilizar o mesmo usuário.
-$Usuario = $Usuario->login("cliente@gmail.com", "12345"); // essa parte em especifico, é justamente para fazer o a função login funcionar.
+// instancia array para os vendedores
+$vendedores = [];
 
-$vendedor = new Usuario(); 
-$vendedor = $Usuario->login("vendedor@gmail.com", "12345");
+// vendedor pre-definido para que tenha algum estoque para o cliente
+$vendedores[] = new Vendedor("222.222.222-22", "Vendedor", "Teste", "vendedor@gmail.com", "12345");
+$vendedores[] = new Vendedor("222.222.222-22", "Vendedor", "Teste", "vendedor@gmail.com", "12345");
+$vendedores[0]->adcionarEstoque("GTA V", 10, 150.00);
+$vendedores[0]->adcionarEstoque("Minecraft", 5, 100.00);
+$vendedores[0]->adcionarEstoque("The Witcher 3", 3, 200.00);
+$vendedores[1]->adcionarEstoque("AVIÃOZINHO DO TRÁFICO 3:ABRI UM PORTAL PRO INFERNO NA FAVELA TENTANDO REVIVER MIT AIA E PRECISO FECHAR", 10, 150.00);
+$vendedores[1]->adcionarEstoque("mineirinho ultra adventure 2", 5, 100.00);
+$vendedores[1]->adcionarEstoque("bad rats", 3, 200.00);
 
-$Usuario->conta->depositar(1000);
+// ====== MENU PARA CLIENTE ======
+function menuCliente(Cliente $cliente, $vendedores): bool
+{
+    $menuAberto = true;
+    while ($menuAberto) {
+        echo "\n===== MENU CLIENTE =====\n";
+        echo "1. Listar estoque do vendedor\n";
+        echo "2. Adicionar produto ao carrinho\n";
+        echo "3. Listar carrinho\n";
+        echo "4. Comprar carrinho\n";
+        echo "5. Depositar dinheiro\n";
+        echo "6. Mostrar saldo\n";
+        echo "0. Logout\n";
 
-$vendedor->adcionarEstoque("Red Dead Redemption 2", 10, 250.00);
-$vendedor->adcionarEstoque("Dark Souls III", 15, 180.00);
-$vendedor->adcionarEstoque("God of War", 5, 300.00);
-$vendedor->adcionarEstoque("Hollow Knight", 20, 80.00);
-$vendedor->adcionarEstoque("Cyberpunk 2077", 8, 220.00);
-$vendedor->adcionarEstoque("Sekiro: Shadows Die Twice", 12, 200.00);
-$vendedor->adcionarEstoque("Battlefield 6", 7, 150.00);
-$vendedor->adcionarEstoque("The Witcher 3: Wild Hunt", 9, 190.00);
+        $opcao = readline("Escolha uma opção: ");
 
-$Usuario->adcionarCarrinho($vendedor->getEstoque()[1], 1);
+        switch ($opcao) {
+            case 1:
+                foreach ($vendedores as $i => $vendedor){
+                    echo "\nvendedor ". $i+1;
+                    $vendedor->listarEstoque();
+                }
+                break;
+            case 2:
+                foreach ($vendedores as $i => $vendedor){
+                    echo "\nvendedor ". $i+1;
+                    $vendedor->listarEstoque();
+                }
+                $nVendedor = (int)readline("Digite o numero do vendedor: ") - 1;
+                $index = (int)readline("Digite o índice do produto (0,1,2...): ");
+                $qtd = (int)readline("Digite a quantidade: ");
+                $estoque = $vendedores[$nVendedor]->getEstoque();
+                if (isset($estoque[$index])) {
+                    $cliente->adcionarCarrinho($estoque[$index], (int)$qtd);
+                    echo "Produto adicionado ao carrinho!\n";
+                } else {
+                    echo "Produto inválido.\n";
+                }
+                break;
+            case 3:
+                $cliente->listarCarrinho();
+                break;
+            case 4:
+                $cliente->comprarCarrinho();
+                break;
+            case 5:
+                $valor = readline("Digite o valor a depositar: ");
+                $cliente->conta->depositar((float)$valor);
+                break;
+            case 6:
+                echo $cliente->conta->retornarDados();
+                break;
+            case 0:
+                echo "Logout realizado!\n";
+                $resposta = strtolower(trim(readline("Deseja encerrar o código? (s/n): ")));
+                return $resposta !== 's'; // retorna true para continuar, false para encerrar
+            default:
+                echo "Opção inválida!\n";
+        }
+    }
+    return true;
+}
 
-$Usuario->listarCarrinho();
+// ====== MENU PARA VENDEDOR ======
+function menuVendedor(Vendedor $vendedor): bool
+{
+    $menuAberto = true;
+    while ($menuAberto) {
+        echo "\n===== MENU VENDEDOR =====\n";
+        echo "1. Listar estoque\n";
+        echo "2. Adicionar produto ao estoque\n";
+        echo "3. Remover produto do estoque\n";
+        echo "4. Mostrar saldo\n";
+        echo "0. Logout\n";
 
-$Usuario->comprarCarrinho();
+        $opcao = readline("Escolha uma opção: ");
+
+        switch ($opcao) {
+            case 1:
+                $vendedor->listarEstoque();
+                break;
+            case 2:
+                $nome = readline("Nome do jogo: ");
+                $qtd = (int)readline("Quantidade: ");
+                $preco = (float)readline("Preço: ");
+                $vendedor->adcionarEstoque($nome, $qtd, $preco);
+                break;
+            case 3:
+                $vendedor->listarEstoque();
+                $index = (int)readline("Digite o índice do produto para remover: ");
+                $vendedor->removerEstoque($index);
+                break;
+            case 4:
+                echo $vendedor->conta->retornarDados();
+                break;
+            case 0:
+                echo "Logout realizado!\n";
+                $resposta = strtolower(trim(readline("Deseja encerrar o código? (s/n): ")));
+                return $resposta !== 's'; // true = continuar, false = encerrar
+            default:
+                echo "Opção inválida!\n";
+        }
+    }
+    return true;
+}
+
+
+
+$ativo = true;
+
+while ($ativo) {
+    echo "===== LOGIN =====\n";
+    $email = readline("Email: ");
+    $senha = readline("Senha: ");
+
+    $usuario = $auth->login($email, $senha);
+
+    if ($usuario instanceof Cliente) {
+        $ativo = menuCliente($usuario, $vendedores);
+    } elseif ($usuario instanceof Vendedor) {
+        $vendedores[] = $usuario;
+        $ativo = menuVendedor($usuario);
+    } else {
+        echo "Login inválido!\n";
+    }
+}
+
+echo "Programa encerrado!\n";
+
+

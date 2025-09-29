@@ -7,6 +7,7 @@ use Unimar\Poo\Vendedor;
 
 class Usuario
 {
+
     protected string $cpf;
     protected string $nome;
     protected string $sobrenome;
@@ -15,7 +16,7 @@ class Usuario
     public $conta;
 
 
-
+    //Função para efetuar login ela recebe como parametros email e senha, se houver uma conta com os email e senha passados ela retornara uma classe cliente ou vendedor a depender da conta
     public function login(string $email, string $senha)
     {   
         if($email == 'cliente@gmail.com' && $senha == '12345') 
@@ -41,7 +42,7 @@ class Usuario
     public function logout()
     {
         echo "Usuario deslogado.\n";
-
+        return new Usuario();
     } 
 
     public function getNomeCompleto(): string
