@@ -12,8 +12,8 @@
 
 ### 1️⃣ Clonar o repositório
 ```bash
-git clone https://github.com/Fabrica-de-Projetos-2-Semestre/projeto-poo-php.git
-cd projeto-poo-php
+git clone https://github.com/dolphin4748/projeto_gustavo.git
+cd projetogustavo
 ```
 
 ---
