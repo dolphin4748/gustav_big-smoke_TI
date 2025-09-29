@@ -55,6 +55,11 @@ class Usuario
         return $this->cpf;
     }
 
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
 }
 
 

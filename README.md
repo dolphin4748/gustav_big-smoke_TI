@@ -65,6 +65,7 @@ O sistema simula uma **plataforma de e-commerce** entre **Clientes** e **Vendedo
 
 ## Fluxo de Execução
 
+0. para efetuar login é apenas necessario usar uma das contas pre-definidas, "cliente@gmail.com" e "vendedor@gmail.com" com ambas tendo a senha "12345"
 1. O **cliente** realiza login e deposita saldo em sua conta.  
 2. O **vendedor** adiciona produtos ao estoque.  
 3. O **cliente** adiciona produtos ao carrinho e lista os itens.  

@@ -13,14 +13,18 @@ $auth = new Usuario();
 $vendedores = [];
 
 // vendedor pre-definido para que tenha algum estoque para o cliente
-$vendedores[] = new Vendedor("222.222.222-22", "Vendedor", "Teste", "vendedor@gmail.com", "12345");
-$vendedores[] = new Vendedor("222.222.222-22", "Vendedor", "Teste", "vendedor@gmail.com", "12345");
-$vendedores[0]->adcionarEstoque("GTA V", 10, 150.00);
-$vendedores[0]->adcionarEstoque("Minecraft", 5, 100.00);
-$vendedores[0]->adcionarEstoque("The Witcher 3", 3, 200.00);
-$vendedores[1]->adcionarEstoque("AVIÃOZINHO DO TRÁFICO 3:ABRI UM PORTAL PRO INFERNO NA FAVELA TENTANDO REVIVER MIT AIA E PRECISO FECHAR", 10, 150.00);
-$vendedores[1]->adcionarEstoque("mineirinho ultra adventure 2", 5, 100.00);
-$vendedores[1]->adcionarEstoque("bad rats", 3, 200.00);
+$vendedores["vendedorPre-definido@gmail.com"] = new Vendedor("222.222.222-22", "Vendedor", "Teste", "vendedor@gmail.com", "12345");
+$vendedores["vendedorPre-definido2@gmail.com"] = new Vendedor("333.333.333-33", "Vendedor", "Teste2", "vendedor2@gmail.com", "54321");
+
+// adicionando estoque
+$vendedores["vendedorPre-definido@gmail.com"]->adcionarEstoque("GTA V", 10, 150.00);
+$vendedores["vendedorPre-definido@gmail.com"]->adcionarEstoque("Minecraft", 5, 100.00);
+$vendedores["vendedorPre-definido@gmail.com"]->adcionarEstoque("The Witcher 3", 3, 200.00);
+
+$vendedores["vendedorPre-definido2@gmail.com"]->adcionarEstoque("AVIÃOZINHO DO TRÁFICO 3", 10, 150.00);
+$vendedores["vendedorPre-definido2@gmail.com"]->adcionarEstoque("mineirinho ultra adventure 2", 5, 100.00);
+$vendedores["vendedorPre-definido2@gmail.com"]->adcionarEstoque("bad rats", 3, 200.00);
+
 
 // ====== MENU PARA CLIENTE ======
 function menuCliente(Cliente $cliente, $vendedores): bool
@@ -40,20 +44,35 @@ function menuCliente(Cliente $cliente, $vendedores): bool
 
         switch ($opcao) {
             case 1:
-                foreach ($vendedores as $i => $vendedor){
-                    echo "\nvendedor ". $i+1;
+                $i = 1;
+                foreach ($vendedores as $email => $vendedor) {
+                    echo "\nVendedor $i (Email: $email)\n";
                     $vendedor->listarEstoque();
+                    $i++;
                 }
                 break;
+
             case 2:
-                foreach ($vendedores as $i => $vendedor){
-                    echo "\nvendedor ". $i+1;
+                $i = 1;
+                $mapa = []; // mapeia número digitado para email do vendedor
+                foreach ($vendedores as $email => $vendedor) {
+                    echo "\nVendedor $i (Email: $email)\n";
                     $vendedor->listarEstoque();
+                    $mapa[$i] = $email;
+                    $i++;
                 }
-                $nVendedor = (int)readline("Digite o numero do vendedor: ") - 1;
+
+                $nVendedor = (int)readline("Digite o número do vendedor: ");
+                if (!isset($mapa[$nVendedor])) {
+                    echo "Vendedor inválido.\n";
+                    break;
+                }
+
+                $emailEscolhido = $mapa[$nVendedor];
                 $index = (int)readline("Digite o índice do produto (0,1,2...): ");
                 $qtd = (int)readline("Digite a quantidade: ");
-                $estoque = $vendedores[$nVendedor]->getEstoque();
+                $estoque = $vendedores[$emailEscolhido]->getEstoque();
+
                 if (isset($estoque[$index])) {
                     $cliente->adcionarCarrinho($estoque[$index], (int)$qtd);
                     echo "Produto adicionado ao carrinho!\n";
@@ -61,6 +80,7 @@ function menuCliente(Cliente $cliente, $vendedores): bool
                     echo "Produto inválido.\n";
                 }
                 break;
+
             case 3:
                 $cliente->listarCarrinho();
                 break;
@@ -142,7 +162,7 @@ while ($ativo) {
     if ($usuario instanceof Cliente) {
         $ativo = menuCliente($usuario, $vendedores);
     } elseif ($usuario instanceof Vendedor) {
-        $vendedores[] = $usuario;
+        $vendedores[$usuario->getEmail()] = $usuario; 
         $ativo = menuVendedor($usuario);
     } else {
         echo "Login inválido!\n";
