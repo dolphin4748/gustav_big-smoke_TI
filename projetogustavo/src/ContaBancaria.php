@@ -4,7 +4,7 @@ namespace Unimar\Poo;
 
 use Unimar\Poo\Usuario;
 
-class ContaBancaria
+abstract class ContaBancaria
 {
     protected Usuario $titular;
     protected float $saldo = 0.0;
