@@ -97,7 +97,7 @@ function menuCliente(Cliente $cliente, $vendedores): bool
             case 0:
                 echo "Logout realizado!\n";
                 $resposta = strtolower(trim(readline("Deseja encerrar o código? (s/n): ")));
-                return $resposta !== 's'; // retorna true para continuar, false para encerrar
+                return $resposta !== 's';  // true = continuar, false = encerrar
             default:
                 echo "Opção inválida!\n";
         }

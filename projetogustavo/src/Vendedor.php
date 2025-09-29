@@ -39,8 +39,8 @@ class Vendedor extends Usuario
             echo "\nnão existe nenhum item no estoque atual.\n";
         }else{
             echo "\nitens do estoque de produtos: \n";
-            foreach ($this->estoque as $item) {
-                echo $item->exibirDetalhes();
+            foreach ($this->estoque as $i => $item) {
+                echo "($i) ". $item->exibirDetalhes();
             }
         }
     } 
